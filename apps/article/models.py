@@ -6,7 +6,7 @@ from mdeditor.fields import MDTextField
 # 文章关键词，用来作为 SEO 中 keywords
 from django.urls import reverse
 
-from myblog import settings
+from Blog_backend import settings
 
 # 文章标签
 class Tag(models.Model):

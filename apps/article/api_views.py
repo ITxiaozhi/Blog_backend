@@ -15,12 +15,8 @@ class ArticleListViews(ModelViewSet):
     queryset = Article.objects.all()
     serializer_class = ArticleListSerializer
     filter_backends = [OrderingFilter]
-    ordering_fields = ('update_date',)
+    ordering_fields = ('create_date',)
 
-
-# class ArticleViews(ModelViewSet):
-#     queryset = Article.objects.all()
-#     serializer_class = ArticleSerializer
 
 class ArticleDetail(APIView):
     """
@@ -35,7 +31,10 @@ class ArticleDetail(APIView):
         try:
             article = Article.objects.get(pk=pk)
         except Article.DoesNotExist:
-            article = ''
+            return Response('404')
+        # 阅读量加一
+        article.views = article.views + 1
+        article.save()
         # 将body转成Markdown格式
         article.body = markdown.markdown(article.body,
                                          extensions=[
@@ -74,7 +73,30 @@ class CategoryArticles(ModelViewSet):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
 
-    def categoryArticles(self, request, pk):
-        categories = Article.objects.filter(category=pk)
+    def categoryArticles(self, request, name):
+        categories = Article.objects.filter(category__name=name)
         ser = ArticleSerializer(categories, many=True)
+        return Response(ser.data)
+
+
+class ArticleHotViews(ModelViewSet):
+    """
+    获取热门文章列表类
+    """
+    queryset = Article.objects.filter().order_by('-views')[:5]
+    serializer_class = ArticleListSerializer
+
+
+class Love(ModelViewSet):
+    """
+    获取指定分类的文章列表
+    """
+    queryset = Article.objects.all()
+    serializer_class = ArticleSerializer
+
+    def love(self, request, pk):
+        article = Article.objects.filter(id=pk)[0]
+        article.loves += 1
+        article.save()
+        ser = ArticleSerializer(article)
         return Response(ser.data)
