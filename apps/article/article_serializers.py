@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from apps.article.models import Article, BigCategory, Category
+from apps.article.models import Article, BigCategory, Category, Tag
 
 
 class BigCategorySerializer(serializers.ModelSerializer):
@@ -23,10 +23,23 @@ class CategorySerializer(serializers.ModelSerializer):
 class ArticleListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Article
-        fields = ('id', 'title', 'summary', 'update_date', 'views', 'loves')
+        fields = ('id', 'title', 'summary', 'create_date', 'views', 'loves')
 
 
 class ArticleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Article
         fields = '__all__'
+
+
+class ArchiveSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Article
+        fields = ('create_date',)
+
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = ('id', 'name')
+

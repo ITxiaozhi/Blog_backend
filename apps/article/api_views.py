@@ -1,11 +1,13 @@
 import markdown
 from rest_framework.filters import OrderingFilter
+from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
-from apps.article.article_serializers import ArticleListSerializer, ArticleSerializer, CategorySerializer
-from apps.article.models import Article, Category
+from apps.article.article_serializers import ArticleListSerializer, ArticleSerializer, CategorySerializer, \
+    ArchiveSerializer, TagSerializer
+from apps.article.models import Article, Category, Tag
 
 
 class ArticleListViews(ModelViewSet):
@@ -74,7 +76,7 @@ class CategoryArticles(ModelViewSet):
     serializer_class = ArticleSerializer
 
     def categoryArticles(self, request, name):
-        categories = Article.objects.filter(category__name=name)
+        categories = Article.objects.filter(category__name=name).order_by('-create_date')
         ser = ArticleSerializer(categories, many=True)
         return Response(ser.data)
 
@@ -89,7 +91,7 @@ class ArticleHotViews(ModelViewSet):
 
 class Love(ModelViewSet):
     """
-    获取指定分类的文章列表
+    文章点赞功能
     """
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
@@ -99,4 +101,47 @@ class Love(ModelViewSet):
         article.loves += 1
         article.save()
         ser = ArticleSerializer(article)
+        return Response(ser.data)
+
+
+class Archive(ModelViewSet):
+    """
+    获取文章归档列表
+    """
+    queryset = Article.objects.distinct_date()
+    serializer_class = ArchiveSerializer
+
+
+class ArchiveArticles(ModelViewSet):
+    """
+    获取指定日期的文章列表
+    """
+    queryset = Article.objects.all()
+    serializer_class = ArticleSerializer
+
+    def archiveArticles(self, request, date):
+        archives = Article.objects.filter(create_date__icontains=date).order_by('-create_date')
+        ser = ArticleSerializer(archives, many=True)
+        return Response(ser.data)
+
+
+class TagList(ModelViewSet):
+    """
+    获取文章标签列表
+    """
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
+
+
+class TagArticles(ModelViewSet):
+    """
+    获取指定标签的文章列表
+    """
+    queryset = Article.objects.all()
+    serializer_class = ArticleSerializer
+
+    def tagArticles(self, request, tag):
+        tags = Tag.objects.filter(id=tag)
+        article = Article.objects.filter(tags=tags).order_by('-create_date')
+        ser = ArticleSerializer(article, many=True)
         return Response(ser.data)
