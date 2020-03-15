@@ -1,7 +1,7 @@
 import xadmin
 
 # Register your models here.
-from apps.article.models import Article, Tag, Category, BigCategory, Carousel
+from apps.article.models import Article, Tag, Category
 
 
 class ArticleAdmin(object):
@@ -9,6 +9,7 @@ class ArticleAdmin(object):
     date_hierarchy = 'create_date'
 
     exclude = ('views',)
+    readonly_fields = ['loves']
 
     # 在查看修改的时候显示的属性，第一个字段带有<a>标签，所以最好放标题
     # list_display = ('id', 'title', 'author', 'create_date', 'update_date')
@@ -22,7 +23,7 @@ class ArticleAdmin(object):
 
     list_per_page = 50  # 控制每页显示的对象数量，默认是100
 
-    filter_horizontal = ('tags', 'keywords')  # 给多选增加一个左右添加的框
+    # filter_horizontal = ('tags',)  # 给多选增加一个左右添加的框
 
     # # 限制用户权限，只能看到自己编辑的文章
     # def get_queryset(self, request):
@@ -40,25 +41,12 @@ class CategoryAdmin(object):
     list_display = ('name', 'id')
 
 
-class BigCategoryAdmin(object):
-    list_display = ('name', 'id')
-
-
 # 自定义管理站点的名称和URL标题
 xadmin.site.site_header = '网站管理'
 xadmin.site.site_title = '博客后台管理'
 
 
-class CarouselAdmin(object):
-    list_display = ('number', 'title', 'content', 'img_url', 'url')
-
-
-class KeywordAdmin(object):
-    list_display = ('name', 'id')
-
 
 xadmin.site.register(Article, ArticleAdmin)
 xadmin.site.register(Tag, TagAdmin)
 xadmin.site.register(Category, CategoryAdmin)
-# xadmin.site.register(BigCategory, BigCategoryAdmin)
-# xadmin.site.register(Carousel, CarouselAdmin)

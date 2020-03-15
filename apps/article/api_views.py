@@ -8,6 +8,7 @@ from rest_framework.viewsets import ModelViewSet
 from apps.article.article_serializers import ArticleListSerializer, ArticleSerializer, CategorySerializer, \
     ArchiveSerializer, TagSerializer
 from apps.article.models import Article, Category, Tag
+from apps.article.utils import PageNum
 
 
 class ArticleListViews(ModelViewSet):
@@ -18,6 +19,7 @@ class ArticleListViews(ModelViewSet):
     serializer_class = ArticleListSerializer
     filter_backends = [OrderingFilter]
     ordering_fields = ('create_date',)
+    pagination_class = PageNum
 
 
 class ArticleDetail(APIView):
@@ -74,11 +76,17 @@ class CategoryArticles(ModelViewSet):
     """
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
+    pagination_class = PageNum
 
     def categoryArticles(self, request, name):
-        categories = Article.objects.filter(category__name=name).order_by('-create_date')
-        ser = ArticleSerializer(categories, many=True)
-        return Response(ser.data)
+        queryset = Article.objects.filter(category__name=name).order_by('-create_date')
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class ArticleHotViews(ModelViewSet):
@@ -118,11 +126,17 @@ class ArchiveArticles(ModelViewSet):
     """
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
+    pagination_class = PageNum
 
     def archiveArticles(self, request, date):
-        archives = Article.objects.filter(create_date__icontains=date).order_by('-create_date')
-        ser = ArticleSerializer(archives, many=True)
-        return Response(ser.data)
+        queryset = Article.objects.filter(create_date__icontains=date).order_by('-create_date')
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class TagList(ModelViewSet):
@@ -139,9 +153,15 @@ class TagArticles(ModelViewSet):
     """
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
+    pagination_class = PageNum
 
     def tagArticles(self, request, tag):
         tags = Tag.objects.filter(id=tag)
-        article = Article.objects.filter(tags=tags).order_by('-create_date')
-        ser = ArticleSerializer(article, many=True)
-        return Response(ser.data)
+        queryset = Article.objects.filter(tags=tags).order_by('-create_date')
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)

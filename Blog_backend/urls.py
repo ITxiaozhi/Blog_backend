@@ -13,14 +13,13 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
+import xadmin
 from django.conf.urls import url, include
 from django.contrib import admin
-import xadmin
 
 from apps.article.views import upload
 
 xadmin.autodiscover()
-
 from xadmin.plugins import xversion
 
 xversion.register_models()
@@ -29,6 +28,6 @@ urlpatterns = [
     url(r'^xadmin/', xadmin.site.urls),
     url(r'mdeditor/uploads/', upload),
     url(r'mdeditor/', include('mdeditor.urls')),
+    url(r'blog/', include('apps.blog.urls', namespace='blog')),
     url(r'article/', include('apps.article.urls', namespace='article')),
-
 ]

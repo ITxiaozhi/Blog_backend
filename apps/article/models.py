@@ -95,20 +95,3 @@ class Article(models.Model):
 
     objects = ArticleManager()
 
-
-# 幻灯片
-class Carousel(models.Model):
-    number = models.IntegerField('编号', help_text='编号决定图片播放的顺序，图片不要多于5张')
-    title = models.CharField('标题', max_length=20, blank=True, null=True, help_text='标题可以为空')
-    content = models.CharField('描述', max_length=80)
-    img_url = models.CharField('图片地址', max_length=200)
-    url = models.CharField('跳转链接', max_length=200, default='#', help_text='图片跳转的超链接，默认#表示不跳转')
-
-    class Meta:
-        verbose_name = '图片轮播'
-        verbose_name_plural = verbose_name
-        # 编号越小越靠前，添加的时间约晚约靠前
-        ordering = ['number', '-id']
-
-    def __str__(self):
-        return self.content[:25]
