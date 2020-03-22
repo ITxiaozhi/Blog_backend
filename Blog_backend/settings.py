@@ -28,6 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = ["*"]
 
 # Application definition
+APPEND_SLASH = False
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -157,3 +158,19 @@ CORS_ORIGIN_WHITELIST = (
     'http://123.57.175.215:8000',
 )
 CORS_ALLOW_CREDENTIALS = True
+
+# # 配置邮件服务器
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.qq.com'
+EMAIL_USE_SSL = True
+EMAIL_PORT = 465
+# 发送邮件的邮箱
+EMAIL_HOST_USER = '1428669288@qq.com'
+# 接受邮件的邮箱
+EMAIL_HOST_RECEIVER = ['hanshouzhi204113@163.com']
+# 在邮箱中设置的客户端授权密码
+EMAIL_HOST_PASSWORD = 'ltdxtqcloieegaif'
+# 收件人看到的发件人
+EMAIL_FROM = '博客留言<1428669288@qq.com>'
+# 主题
+EMAIL_SUBJECT = '博客留言'
