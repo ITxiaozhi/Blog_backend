@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
 from apps.article.article_serializers import ArticleListSerializer, ArticleSerializer, CategorySerializer, \
-    ArchiveSerializer, TagSerializer
+    ArchiveSerializer, TagSerializer, TimeLineSerializer
 from apps.article.models import Article, Category, Tag
 from apps.article.utils import PageNum
 
@@ -165,3 +165,10 @@ class TagArticles(ModelViewSet):
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
+class TimelineViews(ModelViewSet):
+    """
+    获取时间轴列表类
+    """
+    queryset = Article.objects.filter().order_by('-create_date')
+    serializer_class = TimeLineSerializer

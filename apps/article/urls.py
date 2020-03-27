@@ -27,4 +27,5 @@ router.register(r'list', api_views.ArticleListViews, basename='article_list')
 router.register(r'hot', api_views.ArticleHotViews, basename='article_hot')
 router.register(r'archive', api_views.Archive, basename='archive')
 router.register(r'tag', api_views.TagList, basename='tag_list')
+router.register(r'timeline', api_views.TimelineViews, basename='timeline')
 urlpatterns += router.urls
