@@ -55,22 +55,6 @@ class Category(models.Model):
         return self.name
 
 
-# 文章归档模型管理器
-class ArticleManager(models.Manager):
-    def distinct_date(self):  # 该管理器定义了一个distinct_date方法，目的是找出所有的不同日期
-        distinct_date_list = []  # 建立一个列表用来存放不同的日期 年-月
-        date_list = self.values('create_date')  # 根据文章字段create_date找出所有文章的发布时间
-        for date in date_list:  # 对所有日期进行遍历，当然这里会有许多日期是重复的，目的就是找出多少种日期
-            flag = False
-            date = date['create_date'].strftime('%Y-%m')  # 取出一个日期改格式为 ‘xxx年/xxx月 存档’
-            for distinct_date in distinct_date_list:
-                if distinct_date['create_date'] == date:
-                    flag = True
-            if not flag:
-                distinct_date_list.append({'create_date': date})
-        return distinct_date_list
-
-
 # 文章
 class Article(models.Model):
     # author = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='作者')
@@ -92,6 +76,3 @@ class Article(models.Model):
 
     def __str__(self):
         return self.title[:20]
-
-    objects = ArticleManager()
-

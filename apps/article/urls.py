@@ -19,6 +19,10 @@ urlpatterns = [
         name='tag_articles'),
     # 点赞
     url(r'^love/(?P<pk>\d+)$', api_views.Love.as_view({'put': 'love'}), name='love'),
+    url(r'^search/(?P<keyword>\S+)$', api_views.ArticleSearch.as_view({'get': 'search'}), name='search'),
+
+
+    url(r'^rss/$', api_views.BlogFeed(), name='rss'),
 
 ]
 router = routers.DefaultRouter()

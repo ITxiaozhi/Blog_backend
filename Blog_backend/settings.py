@@ -23,7 +23,7 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 SECRET_KEY = '&qefnk1u@!@!*sylb&4mhpp!b)6t1v0wp!fti+yi9^=gpt4ai8'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 
@@ -66,7 +66,7 @@ ROOT_URLCONF = 'Blog_backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -128,12 +128,14 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
+IP_HOST = 'http://api.hanshouzhi.com'
 
 STATIC_URL = '/static/'
-IP_HOST = 'http://123.57.175.215:8000'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
-]
+#STATICFILES_DIRS = [
+#    os.path.join(BASE_DIR, 'static')
+#]
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
@@ -156,6 +158,8 @@ CORS_ORIGIN_WHITELIST = (
     'http://172.17.198.55:8000',
     'http://123.57.175.215:8080',
     'http://123.57.175.215:8000',
+    'http://www.hanshouzhi.com',
+    'http://www.hanshouzhi.com:80'
 )
 CORS_ALLOW_CREDENTIALS = True
 

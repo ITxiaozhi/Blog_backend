@@ -3,7 +3,7 @@ from rest_framework.response import Response
 
 
 class PageNum(PageNumberPagination):
-    page_size = 1  # 后端指定每页显示数量
+    page_size = 10  # 后端指定每页显示数量
     page_size_query_param = 'pagesize'
     max_page_size = 10
 

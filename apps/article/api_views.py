@@ -1,10 +1,12 @@
 import markdown
+from django.contrib.syndication.views import Feed
 from rest_framework.filters import OrderingFilter
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
+from Blog_backend import settings
 from apps.article.article_serializers import ArticleListSerializer, ArticleSerializer, CategorySerializer, \
     ArchiveSerializer, TagSerializer, TimeLineSerializer
 from apps.article.models import Article, Category, Tag
@@ -116,8 +118,21 @@ class Archive(ModelViewSet):
     """
     获取文章归档列表
     """
-    queryset = Article.objects.distinct_date()
+
     serializer_class = ArchiveSerializer
+
+    def get_queryset(self):
+        distinct_date_list = []
+        articles = Article.objects.all().order_by('-create_date')
+        for date in articles:
+            flag = False
+            date = date.create_date.strftime('%Y-%m')
+            for distinct_date in distinct_date_list:
+                if distinct_date['create_date'] == date:
+                    flag = True
+            if not flag:
+                distinct_date_list.append({'create_date': date})
+        return distinct_date_list
 
 
 class ArchiveArticles(ModelViewSet):
@@ -166,9 +181,51 @@ class TagArticles(ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
+
 class TimelineViews(ModelViewSet):
     """
     获取时间轴列表类
     """
     queryset = Article.objects.filter().order_by('-create_date')
     serializer_class = TimeLineSerializer
+
+
+class ArticleSearch(ModelViewSet):
+    queryset = Article.objects.all()
+    serializer_class = ArticleSerializer
+    pagination_class = PageNum
+
+    def search(self, request, keyword):
+        queryset = Article.objects.filter(body__icontains=keyword).order_by('-create_date')
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+class BlogFeed(Feed):
+    # 标题
+    title = settings.SITE_DESCRIPTION
+    # 描述
+    description = '一个用来记录技术的个人博客'
+    # 链接
+    link = "/"
+
+    def items(self):
+        # 返回所有文章
+        return Article.objects.all()
+
+    def item_title(self, item):
+        # 返回文章标题
+        return item.title
+
+    def item_description(self, item):
+        # 返回文章内容
+        return item.body[:30]
+
+    def item_link(self, item):
+        # 返回文章详情页的路由
+        return "http://www.hanshouzhi.com/#/detail/" + str(item.id)
