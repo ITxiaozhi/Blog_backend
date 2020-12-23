@@ -1,4 +1,4 @@
-import xadmin
+from extra_apps import xadmin
 
 # Register your models here.
 from apps.blog.models import About, Message

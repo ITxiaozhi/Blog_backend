@@ -1,4 +1,5 @@
-import xadmin
+from extra_apps import xadmin
+from xadmin import views
 
 # Register your models here.
 from apps.article.models import Article, Tag, Category
@@ -41,11 +42,13 @@ class CategoryAdmin(object):
     list_display = ('name', 'id')
 
 
-# 自定义管理站点的名称和URL标题
-xadmin.site.site_header = '网站管理'
-xadmin.site.site_title = '博客后台管理'
+class GlobalSetting(object):
+    site_title = '博客后台管理'
+    site_footer = 'IT-小志'
+    # menu_style = 'accordion'
 
 
+xadmin.site.register(views.CommAdminView, GlobalSetting)
 
 xadmin.site.register(Article, ArticleAdmin)
 xadmin.site.register(Tag, TagAdmin)
