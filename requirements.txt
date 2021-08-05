@@ -27,7 +27,7 @@ pilkit==2.0
 PyMySQL==0.9.3
 python-dateutil==2.8.1
 pytz==2019.3
-PyYAML==5.3
+PyYAML==5.4
 requests==2.22.0
 six==1.14.0
 tablib==0.14.0
