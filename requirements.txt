@@ -12,7 +12,7 @@ django-imagekit==4.0.1
 django-import-export==2.0.1
 django-mdeditor==0.1.17.1
 django-reversion==3.0.5
-djangorestframework==3.11.0
+djangorestframework==3.11.2
 emoji==0.4.5
 et-xmlfile==1.0.1
 future==0.18.2
