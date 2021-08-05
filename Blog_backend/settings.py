@@ -16,6 +16,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
+sys.path.insert(0, os.path.join(BASE_DIR, 'extra_apps'))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
@@ -23,12 +24,12 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 SECRET_KEY = '&qefnk1u@!@!*sylb&4mhpp!b)6t1v0wp!fti+yi9^=gpt4ai8'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
 # Application definition
-APPEND_SLASH = False
+APPEND_SLASH = True
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -90,7 +91,7 @@ DATABASES = {
         'NAME': 'myblog',
         'USER': 'root',
         'PASSWORD': 'Root123@',
-        'HOST': '127.0.0.1',
+        'HOST': '172.17.198.55',
         'PORT': 3306,
     }
 }
@@ -131,9 +132,9 @@ USE_TZ = True
 IP_HOST = 'http://api.hanshouzhi.com'
 
 STATIC_URL = '/static/'
-#STATICFILES_DIRS = [
-#    os.path.join(BASE_DIR, 'static')
-#]
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'static')
+# ]
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 MEDIA_URL = '/media/'
@@ -159,9 +160,17 @@ CORS_ORIGIN_WHITELIST = (
     'http://123.57.175.215:8080',
     'http://123.57.175.215:8000',
     'http://www.hanshouzhi.com',
-    'http://www.hanshouzhi.com:80'
+    'http://www.hanshouzhi.com:80',
+    'http://api.hanshouzhi.com',
+    'http://api.hanshouzhi.com:80',
+    'http://172.17.198.55:8001',
+    'http://123.57.175.215:8001',
+    'http://www.hanshouzhi.com:8001',
+    'http://api.hanshouzhi.com:8001',
+    'http://172.18.0.1:8001',
 )
 CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_ALLOW_ALL = True
 
 # # 配置邮件服务器
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
